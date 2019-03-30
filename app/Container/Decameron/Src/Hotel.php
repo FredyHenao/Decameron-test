@@ -20,6 +20,6 @@ class Hotel extends Model
     //relationships many to many  de la tabla type_rooms con la tabla type_rooms
     public function typeRooms()
     {
-        return $this->belongsToMany(TypeRoom::class, 'hotel_type_room', 'hotel_id', 'type_room_id');
+        return $this->belongsToMany(TypeRoom::class, 'hotel_type_room', 'hotel_id', 'type_room_id')->withPivot('quantity');
     }
 }

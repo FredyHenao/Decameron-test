@@ -34,5 +34,6 @@ Route::group(['prefix' => 'hotel'], function () {
     $controller = "\\App\\Container\\Decameron\\Src\\Controllers\\";
 
     Route::post('store', $controller.'HotelController@store');
-    Route::get('storeRoom', $controller.'HotelController@storeTypeRoom');
+    Route::post('storeRoom', $controller.'HotelController@storeTypeRoom');
+    Route::post('index', $controller.'HotelController@getHotel');
 });

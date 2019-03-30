@@ -33,7 +33,25 @@ class HotelController extends Controller
     {
         $hotel = Hotel::find($request->id);
         $hotel->typeRooms()->attach($request->type_room_id, ['quantity' => $request->quantity]);
-        return $hotel;
+        
+        return response()->json([
+            'message' => 'Tipo de habitación agregada correctamente!'], 201);
+    }
+
+    public function getHotel(Request $request)
+    {
+        $hotel = Hotel::where('id', $request->id)->with(['typeRooms' => function($query){
+            $query->with('accommodations')->get();
+        }])->get();
+
+        if(!sizeof($hotel))
+        {
+            return response()->json(['menssage'=>'Este Hotel no se encuentra registrado.'], 409);
+        }
+
+        return response()->json([
+            'data' => $hotel], 200);
+
     }
 
 }
