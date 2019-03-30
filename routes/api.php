@@ -22,3 +22,17 @@ Route::group(['prefix' => 'auth'], function () {
         Route::get('user', 'AuthController@user');
     });
 });
+
+Route::group(['prefix' => 'rooms'], function () {
+    $controller = "\\App\\Container\\Decameron\\Src\\Controllers\\";
+
+    Route::get('all', $controller.'TypeRoomController@getAll');
+    Route::get('accommodatios', $controller.'TypeRoomController@getAccommodation');
+});
+
+Route::group(['prefix' => 'hotel'], function () {
+    $controller = "\\App\\Container\\Decameron\\Src\\Controllers\\";
+
+    Route::post('store', $controller.'HotelController@store');
+    Route::get('storeRoom', $controller.'HotelController@storeTypeRoom');
+});

@@ -12,11 +12,11 @@ class AuthController extends Controller
     //Función que se encarga de crear un usuario
     public function signup(Request $request)
     {
-        $request->validate([
-            'name'     => 'required|string',
-            'email'    => 'required|string|email|unique:users',
-            'password' => 'required|string|confirmed',
-        ]);
+        $email = User::where('email', $request->email)->get();
+        if(sizeof($email)){
+            return response()->json(['menssage'=>'Ya se encuentra un usuario con este correo'], 409);
+        }
+
         $user = new User([
             'name'     => $request->name,
             'email'    => $request->email,

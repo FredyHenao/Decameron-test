@@ -14,16 +14,16 @@ class ConfigurationSeeder extends Seeder
     public function run()
     {
         $typeRoom = TypeRoom::find(1);
-        $typeRoom->acommodations()->attach([1,2]);
+        $typeRoom->accommodations()->attach([1,2]);
         $typeRoom->save();
 
         $typeRoom = TypeRoom::find(2);
-        $typeRoom->acommodations()->attach([3,4]);
+        $typeRoom->accommodations()->attach([3,4]);
         $typeRoom->save();
 
 
         $typeRoom = TypeRoom::find(3);
-        $typeRoom->acommodations()->attach([1,2,3]);
+        $typeRoom->accommodations()->attach([1,2,3]);
         $typeRoom->save();
 
     }

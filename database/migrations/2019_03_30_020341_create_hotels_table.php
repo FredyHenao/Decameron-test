@@ -15,11 +15,11 @@ class CreateHotelsTable extends Migration
     {
         Schema::create('hotels', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->text('name');
+            $table->text('name')->unique();
             $table->text('city');
             $table->integer('number_rooms');
             $table->text('address');
-            $table->text('nit');
+            $table->text('nit')->unique();
             $table->timestamps();
         });
     }

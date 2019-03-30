@@ -18,7 +18,7 @@ class TypeRoom extends Model
     ];
 
     //relationships many to many  de la tabla type_rooms con la tabla accommodation
-    public function acommodations()
+    public function accommodations()
     {
         return $this->belongsToMany(Accommodation::class, 'type_room_accommodation', 'type_room_id', 'accommodation_id');
     }

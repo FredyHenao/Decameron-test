@@ -14,6 +14,7 @@ class CreateHotelTypeRoomTable extends Migration
     public function up()
     {
         Schema::create('hotel_type_room', function (Blueprint $table) {
+            $table->integer('quantity');
         });
     }
 
