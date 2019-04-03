@@ -42,5 +42,8 @@ Route::group(['prefix' => 'hotel'], function () {
 
     Route::post('store', $controller.'HotelController@store');
     Route::post('storeRoom', $controller.'HotelController@storeTypeRoom');
-    Route::post('index', $controller.'HotelController@getHotel');
+    Route::get('show/{id?}', $controller.'HotelController@getHotel');
+    Route::get('index', $controller.'HotelController@allHotels');
+    Route::delete('delete/{id?}', $controller.'HotelController@deleteHotel');
+    Route::put('update/{id?}', $controller.'HotelController@update');
 });
