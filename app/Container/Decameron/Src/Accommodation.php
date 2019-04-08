@@ -22,4 +22,10 @@ class Accommodation extends Model
     {
         return $this->belongsToMany(TypeRoom::class, 'type_room_accommodation', 'accommodation_id', 'type_room_id'); 
     }
+
+    //relationships many to many  de la tabla accommodations con la tabla hotels
+    public function hotels()
+    {
+        return $this->belongsToMany(Accommodation::class, 'hotel_type_room_accommodation', 'accommodation_id', 'hotel_id')->withPivot('quantity');
+    }
 }

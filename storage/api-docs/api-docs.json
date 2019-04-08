@@ -253,6 +253,124 @@
                 ]
             }
         },
+        "/api/hotel/room/store": {
+            "post": {
+                "tags": [
+                    "Hotel"
+                ],
+                "summary": "Create type room hotel",
+                "description": "Create type room hotel",
+                "operationId": "storeRoomHotel",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "Id Hotel",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "type_room_id",
+                        "in": "query",
+                        "description": "Id Type Room",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "accommodation_id",
+                        "in": "query",
+                        "description": "Id Type Accommodation",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "quantity",
+                        "in": "query",
+                        "description": "Number Rooms of the type room",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok"
+                    },
+                    "404": {
+                        "description": "Resource Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/room/index": {
+            "get": {
+                "tags": [
+                    "Type Room"
+                ],
+                "summary": "Read all the types romms",
+                "description": "Read all the types romms",
+                "operationId": "roomAll",
+                "responses": {
+                    "200": {
+                        "description": "Ok"
+                    },
+                    "404": {
+                        "description": "Resource Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/room/accommodations/{id}": {
+            "get": {
+                "tags": [
+                    "Type Room"
+                ],
+                "summary": "Read the type of room",
+                "description": "Read the type of room",
+                "operationId": "roomGet",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id type room",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok"
+                    },
+                    "404": {
+                        "description": "Resource Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/auth/signup": {
             "post": {
                 "tags": [

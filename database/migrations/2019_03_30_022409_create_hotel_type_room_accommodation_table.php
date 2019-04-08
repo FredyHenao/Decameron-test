@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateHotelTypeRoomTable extends Migration
+class CreateHotelTypeRoomAccommodationTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,8 @@ class CreateHotelTypeRoomTable extends Migration
      */
     public function up()
     {
-        Schema::create('hotel_type_room', function (Blueprint $table) {
+        Schema::create('hotel_type_room_accommodation', function (Blueprint $table) {
+            $table->bigIncrements('id_relation');
             $table->integer('quantity');
         });
     }

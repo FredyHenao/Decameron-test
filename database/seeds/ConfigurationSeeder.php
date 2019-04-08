@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Container\Decameron\Src\Accommodation;
 use App\Container\Decameron\Src\TypeRoom;
 
 class ConfigurationSeeder extends Seeder

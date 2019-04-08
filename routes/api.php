@@ -30,11 +30,11 @@ Route::group(['prefix' => 'user'], function () {
     });
 });
 
-Route::group(['prefix' => 'rooms'], function () {
+Route::group(['prefix' => 'room'], function () {
     $controller = "\\App\\Container\\Decameron\\Src\\Controllers\\";
 
-    Route::get('all', $controller.'TypeRoomController@getAll');
-    Route::get('accommodatios', $controller.'TypeRoomController@getAccommodation');
+    Route::get('index', $controller.'TypeRoomController@getAll');
+    Route::get('accommodations/{id?}', $controller.'TypeRoomController@getAccommodation');
 });
 
 Route::group(['prefix' => 'hotel'], function () {
@@ -46,4 +46,9 @@ Route::group(['prefix' => 'hotel'], function () {
     Route::get('index', $controller.'HotelController@allHotels');
     Route::delete('delete/{id?}', $controller.'HotelController@deleteHotel');
     Route::put('update/{id?}', $controller.'HotelController@update');
+
+    Route::group(['prefix' => 'room'], function () {
+        $controller = "\\App\\Container\\Decameron\\Src\\Controllers\\";
+        Route::post('store', $controller.'HotelController@storeRoomHotel');
+    });
 });

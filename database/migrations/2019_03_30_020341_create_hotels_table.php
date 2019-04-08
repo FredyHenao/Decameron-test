@@ -20,6 +20,7 @@ class CreateHotelsTable extends Migration
             $table->integer('number_rooms');
             $table->text('address');
             $table->text('nit')->unique();
+            $table->boolean('edited')->default(false);
             $table->timestamps();
         });
     }

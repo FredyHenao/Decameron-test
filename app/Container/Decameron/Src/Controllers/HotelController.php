@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Container\Decameron\Src\Hotel;
+use App\Container\Decameron\Src\TypeRoom;
+use App\Container\Decameron\Src\Accommodation;
 
 class HotelController extends Controller
 {
@@ -82,7 +84,7 @@ class HotelController extends Controller
     {
         $validation = Hotel::where('name', $request->name)->orWhere('nit', $request->nit)->get();
         if(sizeof($validation)){
-            return response()->json(['menssage'=>'Este Hotel ya se encuentra registrado.'], 409);
+            return response()->json(['message'=>'Este Hotel ya se encuentra registrado.'], 409);
         }
 
         $hotel = new Hotel;
@@ -94,6 +96,7 @@ class HotelController extends Controller
         $hotel->save();
 
         return response()->json([
+            'hotel' => $hotel,
             'message' => 'Hotel Creado Correctamente!'], 201);
     }
 
@@ -107,7 +110,7 @@ class HotelController extends Controller
      * @OA\Put(
      *      path="/api/hotel/update/{id}",
      *      operationId="hotelUpdate",
-     *      tags={"Hotel"},
+     *      tags={"Hotel"},'id as idRelation',
      *      summary="Update hotel",
      *      description="Update hotel",
      *      @OA\Parameter(
@@ -177,19 +180,52 @@ class HotelController extends Controller
     public function update(Request $request, $id)
     {
         $hotel = Hotel::find($id);
+
         if(!$hotel){
             return response()->json(['menssage'=>'Este Hotel no se encuentra registrado.'], 404);
+        }else{
+            if(($hotel->name == $request->name) && ($hotel->nit != $request->nit))
+            {
+                $validation = Hotel::where('nit', $request->nit)->get();
+                if(sizeof($validation)){
+                    return response()->json(['message'=>'Este Hotel ya se encuentra registrado.'], 409);
+                }else{
+                    $hotel->name = $request->name;
+                    $hotel->city = $request->city;
+                }
+            }
+
+            if(($hotel->name != $request->name) && ($hotel->nit == $request->nit))
+            {
+                $validation = Hotel::where('name', $request->name)->get();
+                //$validation = Hotel::where('name', $request->name)->orWhere('nit', $request->nit)->get();
+                if(sizeof($validation)){
+                    return response()->json(['message'=>'Este Hotel ya se encuentra registrado.'], 409);
+                }else{
+                    $hotel->name = $request->name;
+                    $hotel->city = $request->city;
+                }
+            }
+
+            if(($hotel->name != $request->name) && ($hotel->nit != $request->nit))
+            {
+                $validation = Hotel::where('name', $request->name)->orWhere('nit', $request->nit)->get();
+                if(sizeof($validation)){
+                    return response()->json(['message'=>'Este Hotel ya se encuentra registrado.'], 409);
+                }else{
+                    $hotel->name = $request->name;
+                    $hotel->city = $request->city;
+                }
+            }
+
+            $hotel->number_rooms = $request->number_rooms;
+            $hotel->address = $request->address;
+            $hotel->nit = $request->nit;
+            $hotel->save();
+
+            return response()->json([
+                'message' => 'Hotel Modificado Correctamente!'], 201);
         }
-
-        $hotel->name = $request->name;
-        $hotel->city = $request->city;
-        $hotel->number_rooms = $request->number_rooms;
-        $hotel->address = $request->address;
-        $hotel->nit = $request->nit;
-        $hotel->save();
-
-        return response()->json([
-            'message' => 'Hotel Modificado Correctamente!'], 201);
     }
 
     /**
@@ -226,17 +262,26 @@ class HotelController extends Controller
     //Función que se encarga de traer un hotel en especifico
     public function getHotel(Request $request)
     {
-        $hotel = Hotel::where('id', $request->id)->with(['typeRooms' => function($query){
-            $query->with('accommodations')->get();
-        }])->get();
+        //return response()->json(['data' => $hotel, 'suma' => $result, 200);
+        $hotel = Hotel::where('id', $request->id)
+                        ->with(['typeRooms' => function($query){
+                            $query->select('id_relation','accommodation_id', 'type_room_id', 'quantity')->get();
+                        }])
+                        ->select('id', 'name', 'city', 'number_rooms', 'address', 'nit', 'edited')
+                        ->get();
 
         if(!sizeof($hotel))
         {
-            return response()->json(['menssage'=>'Este Hotel no se encuentra registrado.'], 409);
+            return response()->json(['menssage'=>'Este Hotel no se encuentra registrado.'], 404);
         }
-
-        return response()->json([
-            'data' => $hotel], 200);
+        foreach($hotel[0]->typeRooms as $item)
+        {
+            $typeRoom = TypeRoom::where('id',$item->type_room_id)->select('name')->get();
+            $accommodation = Accommodation::where('id',$item->accommodation_id)->select('name')->get();
+            $item->accommodation_name = $accommodation[0]->name;
+            $item->type_room_name = $typeRoom[0]->name;
+        }
+        return response()->json($hotel, 200);
 
     }
 
@@ -265,22 +310,19 @@ class HotelController extends Controller
     //Función que se encarga de traer los hoteles
     public function allHotels(Request $request)
     {
-        $hotel = Hotel::with(['typeRooms' => function($query){
-            $query->with('accommodations')->get();
-        }])->get();
+        $hotel = Hotel::select('id', 'name', 'city', 'number_rooms', 'address', 'nit', 'edited')->get();
 
         if(!sizeof($hotel))
         {
-            return response()->json(['menssage'=>'No hay Hoteles registrados.'], 409);
+            return response()->json(['message'=>'No hay Hoteles registrados.'], 404);
         }
 
-        return response()->json([
-            'data' => $hotel], 200);
+        return response()->json($hotel, 200);
 
     }
 
     /**
-     * Read all the hotels.
+     * Delete hotel.
      * @param Request $request
      * @return \Illuminate\Http\Response
      *
@@ -320,13 +362,92 @@ class HotelController extends Controller
 
     }
 
-    public function storeTypeRoom(Request $request)
+    /**
+     * Create type room hotel.
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     *
+     * Swagger
+     *
+     * @OA\Post(
+     *      path="/api/hotel/room/store",
+     *      operationId="storeRoomHotel",
+     *      tags={"Hotel"},
+     *      summary="Create type room hotel",
+     *      description="Create type room hotel",
+     *      @OA\Parameter(
+     *          name="id",
+     *          description="Id Hotel",
+     *          required=true,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *      @OA\Parameter(
+     *          name="type_room_id",
+     *          description="Id Type Room",
+     *          required=true,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *      @OA\Parameter(
+     *          name="accommodation_id",
+     *          description="Id Type Accommodation",
+     *          required=true,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *      @OA\Parameter(
+     *          name="quantity",
+     *          description="Number Rooms of the type room",
+     *          required=true,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *      @OA\Response(response=200, description="Ok"),
+     *      @OA\Response(response=404, description="Resource Not Found"),
+     *      security={
+     *         {
+     *             "bearerAuth": {}
+     *         }
+     *     },
+     * )
+     */
+    //Función que se encarga de agregar los tipos de habitación al hotel
+    public function storeRoomHotel(Request $request)
     {
         $hotel = Hotel::find($request->id);
-        $hotel->typeRooms()->attach($request->type_room_id, ['quantity' => $request->quantity]);
+        if(!$hotel || !(TypeRoom::find($request->type_room_id)) || !(Accommodation::find($request->accommodation_id)))
+        {
+            return response()->json(['menssage'=>'Los datos no coinciden con nuestros registros.'], 404);
+        }else {
+            $result = $hotel->typeRooms()->where([['type_room_id', $request->type_room_id],['accommodation_id', $request->accommodation_id]])->get();
+            if(sizeof($result))
+            {
+                return response()->json(['menssage'=>'Este tipo de habitación ya se encuentra registrada.'], 409);
+            }else{
+                $result = $hotel->num_rooms;
+                if(($result[0]->accommodations->sum('quantity') + $request->quantity) > $result[0]->number_rooms){
+                    return response()->json(['menssage'=>'Excedió el numero permitido de habitaciones del hotel.'], 409);
+                }else{
+                    if($request->quantity <= 0){
+                        return response()->json(['menssage'=>'El Número de habitaciones debe ser mayor a 0.'], 409);
+                    }else {
+                        $hotel->typeRooms()->attach($request->type_room_id, ['accommodation_id' => $request->accommodation_id,'quantity' => $request->quantity]);
         
-        return response()->json([
-            'message' => 'Tipo de habitación agregada correctamente!'], 201);
+                    return response()->json([
+                        'message' => 'Tipo de habitación agregada correctamente!'], 201);
+                    }
+                }
+            }
+        }
     }
 
 }
