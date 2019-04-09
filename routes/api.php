@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
+//Rutas del Auth
 Route::group(['prefix' => 'auth'], function () {
     Route::post('login', 'AuthController@login');
     Route::post('signup', 'AuthController@signup');
@@ -22,6 +23,7 @@ Route::group(['prefix' => 'auth'], function () {
     });
 });
 
+//Rutas del usuario
 Route::group(['prefix' => 'user'], function () {
     Route::get('all', 'AuthController@user');
     Route::get('show/{id?}', 'AuthController@userShow');
@@ -30,6 +32,7 @@ Route::group(['prefix' => 'user'], function () {
     });
 });
 
+//Rutas de las habitaciones
 Route::group(['prefix' => 'room'], function () {
     $controller = "\\App\\Container\\Decameron\\Src\\Controllers\\";
 
@@ -37,6 +40,7 @@ Route::group(['prefix' => 'room'], function () {
     Route::get('accommodations/{id?}', $controller.'TypeRoomController@getAccommodation');
 });
 
+//Rutas del hotel
 Route::group(['prefix' => 'hotel'], function () {
     $controller = "\\App\\Container\\Decameron\\Src\\Controllers\\";
 
@@ -50,5 +54,6 @@ Route::group(['prefix' => 'hotel'], function () {
     Route::group(['prefix' => 'room'], function () {
         $controller = "\\App\\Container\\Decameron\\Src\\Controllers\\";
         Route::post('store', $controller.'HotelController@storeRoomHotel');
+        Route::delete('delete/{id?}/{id_relation?}', $controller.'HotelController@deleteHotelRoom');
     });
 });

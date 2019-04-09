@@ -38,9 +38,8 @@ class TypeRoomController extends Controller
         $data = TypeRoom::select('id', 'name')
                           ->get();
         if(!sizeof($data))
-        {
-            return response()->json(['message'=>'No hay tipos de habitaciones registradas.'], 409);
-        }          
+            return response()->json(['message'=>'No hay tipos de habitaciones registradas.'], 409);  
+             
         return response()->json($data, 200);
     }
 
@@ -86,10 +85,8 @@ class TypeRoomController extends Controller
                           ->get();
 
         if(!sizeof($data))
-        {
             return response()->json(['message'=>'Este tipo de habitación no se encuentra registrada.'], 404);
-        }
                   
-        return response()->json($data, 200);
+        return response()->json($data[0], 200);
     }
 }

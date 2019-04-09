@@ -314,6 +314,49 @@
                 ]
             }
         },
+        "/api/hotel/room/delete/{id}/{id_relation}": {
+            "delete": {
+                "tags": [
+                    "Hotel"
+                ],
+                "summary": "Delete a type of room of the hotel",
+                "description": "Delete a type of room of the hotel",
+                "operationId": "typeRoomDelete",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id Hotel",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "id_relation",
+                        "in": "path",
+                        "description": "Id Type Room",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok"
+                    },
+                    "404": {
+                        "description": "Resource Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/room/index": {
             "get": {
                 "tags": [

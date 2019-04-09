@@ -46,6 +46,9 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if ($exception instanceof CustomException)
+            return response()->json(['message'=>'Error Interno del Servidor'], 500);
+
         return parent::render($request, $exception);
     }
 }

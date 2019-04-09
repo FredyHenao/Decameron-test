@@ -26,6 +26,6 @@ class Accommodation extends Model
     //relationships many to many  de la tabla accommodations con la tabla hotels
     public function hotels()
     {
-        return $this->belongsToMany(Accommodation::class, 'hotel_type_room_accommodation', 'accommodation_id', 'hotel_id')->withPivot('quantity');
+        return $this->belongsToMany(Hotel::class, 'hotel_type_room_accommodation', 'accommodation_id', 'hotel_id')->withPivot('quantity');
     }
 }

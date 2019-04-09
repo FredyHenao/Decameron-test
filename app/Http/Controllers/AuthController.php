@@ -91,9 +91,8 @@ class AuthController extends Controller
     public function signup(Request $request)
     {
         $email = User::where('email', $request->email)->get();
-        if(sizeof($email)){
+        if(sizeof($email))
             return response()->json(['menssage'=>'Ya se encuentra un usuario con este correo'], 409);
-        }
 
         $user = new User([
             'name'     => $request->name,
@@ -155,16 +154,16 @@ class AuthController extends Controller
             'remember_me' => 'boolean',
         ]);
         $credentials = request(['email', 'password']);
-        if (!Auth::attempt($credentials)) {
-            return response()->json([
-                'message' => 'Unauthorized'], 401);
-        }
+        if (!Auth::attempt($credentials)) 
+            return response()->json(['message' => 'Unauthorized'], 401);
+    
         $user = $request->user();
         $tokenResult = $user->createToken('Personal Access Token');
         $token = $tokenResult->token;
-        if ($request->remember_me) {
+
+        if ($request->remember_me) 
             $token->expires_at = Carbon::now()->addWeeks(1);
-        }
+        
         $token->save();
         return response()->json([
             'access_token' => $tokenResult->accessToken,
@@ -293,9 +292,9 @@ class AuthController extends Controller
     public function userShow($id)
     {
         $user = User::find($id);
-        if (!$user) {
+        if (!$user) 
             return response()->json(['mensaje'=>'No se encuentra el usuario'], 404);
-        }
+        
         return response()->json(User::find($id), 200);
     }
 }
