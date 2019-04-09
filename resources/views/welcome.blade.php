@@ -77,7 +77,8 @@
 
                 <div class="links">
                     <a href="api/documentation">Docs</a>
-                    <a href="https://github.com/FredyHenao/Decameron-test-back">GitHub</a>
+                    <a href="https://github.com/FredyHenao/Decameron-test-back">GitHub API</a>
+                    <a href="https://github.com/FredyHenao/Decameron-test-front">GitHub Front</a>
                 </div>
             </div>
         </div>
